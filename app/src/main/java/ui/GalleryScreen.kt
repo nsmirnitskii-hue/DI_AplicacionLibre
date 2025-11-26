@@ -17,7 +17,7 @@ import com.example.aplicacionlibre.AppViewModel
 
 @Composable
 fun GalleryScreen(vm: AppViewModel, navController: NavController) {
-    AppScaffold(title = "Galería", navController = navController) {
+    AppScaffold() {
         val images = listOf(
             painterResource(android.R.drawable.ic_menu_camera),
             painterResource(android.R.drawable.ic_menu_gallery),

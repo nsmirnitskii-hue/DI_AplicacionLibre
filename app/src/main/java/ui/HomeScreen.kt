@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    AppScaffold(title = "Inicio", navController = navController) {
+    AppScaffold() {
         Box(
             Modifier.fillMaxSize(),
             Alignment.Center
