@@ -13,7 +13,6 @@ import com.example.aplicacionlibre.AppViewModel
 
 @Composable
 fun TodoScreen(vm: AppViewModel, navController: NavController) {
-    AppScaffold() {
         var text by remember { mutableStateOf("") }
 
         Column(Modifier.fillMaxSize().padding(16.dp)) {
@@ -42,4 +41,3 @@ fun TodoScreen(vm: AppViewModel, navController: NavController) {
             }
         }
     }
-}

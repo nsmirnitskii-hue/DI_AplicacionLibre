@@ -18,14 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AplicacionLibreTheme {
-                AppScaffold {
-                    Box(
-                        Modifier.fillMaxSize(),
-                        Alignment.Center
-                    ) {
-                        Text("Bienvenido a la App de Jetpack Compose")
-                    }
-                }
+                AppScaffold()
             }
         }
     }

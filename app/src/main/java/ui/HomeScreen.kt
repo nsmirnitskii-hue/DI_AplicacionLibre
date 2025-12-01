@@ -9,7 +9,6 @@ import androidx.navigation.NavController
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    AppScaffold() {
         Box(
             Modifier.fillMaxSize(),
             Alignment.Center
@@ -17,4 +16,3 @@ fun HomeScreen(navController: NavController) {
             Text("Bienvenido a la App de Jetpack Compose")
         }
     }
-}

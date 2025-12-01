@@ -14,7 +14,7 @@ import com.example.aplicacionlibre.AppViewModel
 
 @Composable
 fun ColorScreen(vm: AppViewModel, navController: NavController) {
-    AppScaffold() {
+
     val colors = listOf(Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Magenta)
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
@@ -41,4 +41,3 @@ fun ColorScreen(vm: AppViewModel, navController: NavController) {
         }
     }
         }
-}
