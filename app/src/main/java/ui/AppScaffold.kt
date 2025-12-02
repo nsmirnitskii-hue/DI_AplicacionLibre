@@ -12,8 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -30,9 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.aplicacionlibre.R
 import kotlinx.coroutines.launch
 
 
@@ -46,101 +46,95 @@ sealed class Screen(val route: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold() {
-
-    val drawState = rememberDrawerState(DrawerValue.Closed)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val navController = rememberNavController()
+    val navController = rememberNavController() // Solo una vez aquí
 
-    // Obtener la ruta actual para resaltar el ítem correcto
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-
-    // Sincronizar selectedItem con la ruta actual
-    var selectedItem by remember { mutableStateOf("Inicio") }
-
-    // Actualizar selectedItem cuando cambia la ruta
-    LaunchedEffect(currentRoute) {
-        selectedItem = when (currentRoute) {
-            "Home" -> "Inicio"
-            "gallery" -> "Galeria"
-            "tareas" -> "Tareas"
-            "color" -> "Colores"
-            else -> "Inicio"
-        }
-    }
-
+    // Obtener la ruta actual
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     ModalNavigationDrawer(
-        drawerState = drawState,
+        drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet { //Es donde colocas los elementos de tu menú lateral.
-               Column(Modifier.padding(horizontal = 16.dp)
-                   .verticalScroll(rememberScrollState())) {
-                   Spacer(Modifier.height(12.dp))
-                   Text("Titulo", Modifier.padding(16.dp),
-                       style = MaterialTheme.typography.titleLarge)
-                   HorizontalDivider()
-                   NavigationDrawerItem(
-                       label = {Text("Inicio")},
-                       selected = selectedItem == "Inicio",
-                       onClick = {
-                           selectedItem = "Inicio"
-                           navController.navigate("Home")
-                       }
-                   )
-                   NavigationDrawerItem(
-                       label = {Text("Galeria")},
-                       selected = selectedItem == "Galeria",
-                       onClick = {
-                           selectedItem = "Galeria"
-                           navController.navigate("gallery")
-                       }
-                   )
-                   NavigationDrawerItem(
-                       label = {Text("Tareas")},
-                       selected = selectedItem == "Tareas",
-                       onClick = {
-                           selectedItem = "Tareas"
-                           navController.navigate("tareas")
-                       }
-                   )
-                   NavigationDrawerItem(
-                       label = {Text("Colores")},
-                       selected = selectedItem == "Colores",
-                       onClick = {
-                           selectedItem = "Colores"
-                           navController.navigate("color")
-                       }
-                   )
-                   HorizontalDivider()
-               }
+            ModalDrawerSheet(
+                Modifier.padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "Aplicación Libre",
+                    Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                HorizontalDivider()
 
+                NavigationDrawerItem(
+                    label = { Text("Inicio") },
+                    selected = currentRoute == "Home",
+                    onClick = {
+                        navController.navigate("Home") {
+                            // Esto evita múltiples copias de la misma pantalla
+                            popUpTo("Home") { inclusive = true }
+                        }
+                        scope.launch { drawerState.close() }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Galería") },
+                    selected = currentRoute == "gallery",
+                    onClick = {
+                        navController.navigate("gallery") {
+                            launchSingleTop = true
+                        }
+                        scope.launch { drawerState.close() }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Tareas") },
+                    selected = currentRoute == "tareas",
+                    onClick = {
+                        navController.navigate("tareas") {
+                            launchSingleTop = true
+                        }
+                        scope.launch { drawerState.close() }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Colores") },
+                    selected = currentRoute == "color",
+                    onClick = {
+                        navController.navigate("color") {
+                            launchSingleTop = true
+                        }
+                        scope.launch { drawerState.close() }
+                    }
+                )
+                HorizontalDivider()
             }
         }
-
     ) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Aplicacion libre") },
+                    title = { Text("Aplicación Libre") },
                     navigationIcon = {
                         IconButton({
                             scope.launch {
-                                if (drawState.isClosed)
-                                    drawState.open() else drawState.close()
+                                if (drawerState.isClosed)
+                                    drawerState.open() else drawerState.close()
                             }
                         }) {
                             Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menú"
+                                painter = painterResource(R.drawable.menu),
+                                contentDescription = "Menu"
                             )
-
                         }
                     }
                 )
             }
-        ) {innerPadding ->
+        ) { innerPadding ->
             Navigation(navController = navController, innerPadding = innerPadding)
         }
     }
-
 }
